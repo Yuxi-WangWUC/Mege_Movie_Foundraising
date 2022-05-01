@@ -111,6 +111,50 @@ def string_check(choice, options):
 
 #get list of snacks
 def get_snack():
+    if check_snack == "Yes":
+        desired_snack = ""
+        while desired_snack != "x":
+
+            snack_row = []
+
+            #ask user for desired snack and put it in lowercase
+            desired_snack = input("Snack (type x to exit choices): ").lower()
+            if desired_snack == "x":
+                break
+
+            # if desired_snack has a number, separate it into two (number / desired_snack)
+            if re.match(number_regex, desired_snack):
+                amount = int(desired_snack[0])
+                desired_snack = desired_snack[1:]
+
+            else:
+                amount = 1
+                desired_snack = desired_snack
+
+            # remove white space around snack
+            desired_snack = desired_snack.strip()
+
+            #check if snack is valid
+            snack_choice = string_check(desired_snack, valid_snacks)
+            if snack_choice == "invalid choice":# ADDED CODE %%%%%%%%%%%%%%%%%%%%%%%%%%
+                print("Your choice is not a valid option. Try again.")# ADDED CODE %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+            #check snack amount is valid (less than 5)
+            if amount >= 5:
+                print("Sorry - we have a four snack maximum")
+                snack_choice = "invalid choice"
+
+            #add snack and amount to list...
+            amount_snack = "{} {}".format(amount, snack_choice)
+            snack_row.append(amount)
+            snack_row.append(snack_choice)
+
+            #check that snack is not the exit code before adding
+            if snack_choice != "x" and snack_choice != "invalid choice":
+                snack_order.append(amount_snack)
+                snack_order.append(snack_row)
+                print(amount_snack)
+
 
 #""""""""""Main Routine""""""""""
 
@@ -217,7 +261,7 @@ while name != "x" and ticket_count < MAX_TICKETS:
     print()
     if len(snack_order) == 0:
         print("Snacks Ordered: None")
-        
+
     else:
         print("Snacks Ordered: ")
         print(snack_order)
