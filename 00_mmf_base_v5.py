@@ -1,20 +1,20 @@
-#import statements
+# import statements
 import re
 import pandas
 
 
-#functions go here
+# functions go here
 
-  #check the tickets names are not blank
+# check the tickets names are not blank
 def not_blank(question):
     valid = False
 
     while not valid:
         response = input(question)
-        #if the name is not blank, the program continues
+        # if the name is not blank, the program continues
         if response != "":
             return response
-        #if the name is blank, show error and repeat the question
+        # if the name is blank, show error and repeat the question
         else:
             print("Sorry, this can't be blank,"
                   "please enter your name")
@@ -22,7 +22,7 @@ def not_blank(question):
 
 
 
-#check for an integer bewteen 2 values:
+# check for an integer bewteen 2 values:
 def int_check(question):
 
     error = "Please enter a whole number that is more than 0 "
@@ -44,8 +44,8 @@ def int_check(question):
             print(error)
 
 
-#check number of tickets lefe and warns user
-#if maximum is being approached
+# check number of tickets lefe and warns user
+# if maximum is being approached
 def check_tickets(tickets_sold, ticket_limit):
     #tell user how many seats are left
     if ticket_count < MAX_TICKETS - 1:
@@ -59,13 +59,13 @@ def check_tickets(tickets_sold, ticket_limit):
     return ""
 
 
-#gets ticket price based on age
+# gets ticket price based on age
 def get_ticket_price():
 
-    #Get age between 12 and 130
+    # Get age between 12 and 130
     age = int_check("Age: ")
 
-    #check that age is valid...
+    # check that age is valid...
     if age < 12:
         print("Sorry you are too young for this movie")
         return "invalid ticket price"
@@ -79,8 +79,8 @@ def get_ticket_price():
         ticket_price = 10.5
     else:
         ticket_price = 6.5
-    return ticket_price
 
+    return ticket_price
 
 
 def string_check(choice, options):
@@ -90,16 +90,16 @@ def string_check(choice, options):
 
     for var_list in options:
 
-        #if the snack is in one of the lists, return the full response
-        if chosen in var_list:
+        # if the snack is in one of the lists, return the full response
+        if choice in var_list:
 
-            #get full name of snack and put it in
-            #title case so it looks nice when outputted
+            # get full name of snack and put it in
+            # title case so it looks nice when outputted
             chosen = var_list[0].title()
             is_valid = "yes"
             break
 
-        #if the chosen option is not valid, set is_valid to
+        # if the chosen option is not valid, set is_valid to
         else:
             is_valid = "no"
 
@@ -107,66 +107,84 @@ def string_check(choice, options):
     if is_valid == "yes":
         return chosen
     else:
+        print("Please enter a valid option")
+        print()
         return "invalid choice"
+
 
 #get list of snacks
 def get_snack():
-    if check_snack == "Yes":
-        desired_snack = ""
-        while desired_snack != "x":
+    #regular expression to find if desired_snack starts with a number
+    number_regex = "^[1-9]"
 
-            snack_row = []
+    # valid snacks holds list of all snacks
+    # Each item in valid snacks is a list with
+    # valid options for each snack <full name, letter code (a - e)
+    # , and possible abbreviations etc>
 
-            #ask user for desired snack and put it in lowercase
-            desired_snack = input("Snack (type x to exit choices): ").lower()
-            if desired_snack == "x":
-                break
+    valid_snacks = [
+    ["popcorn", "p", "corn", "a"],
+    ["M&Ms", "m&m's", "mms", "m", "b"],    # first desired_snack is M&Ms for inclusion in output
+    ["pita chips", "chips", "pc", "pita", "c"],
+    ["water", "w", "d"],
+    ["orange juice", "oj", "o", "juice", "e"]
+]
 
-            # if desired_snack has a number, separate it into two (number / desired_snack)
-            if re.match(number_regex, desired_snack):
-                amount = int(desired_snack[0])
-                desired_snack = desired_snack[1:]
+    # LIST holds snack order for a single user
+    snack_order = []
 
-            else:
-                amount = 1
-                desired_snack = desired_snack
+    desired_snack = ""
+    while desired_snack != "x":
 
-            # remove white space around snack
-            desired_snack = desired_snack.strip()
+        snack_row = []
 
-            #check if snack is valid
-            snack_choice = string_check(desired_snack, valid_snacks)
-            if snack_choice == "invalid choice":# ADDED CODE %%%%%%%%%%%%%%%%%%%%%%%%%%
-                print("Your choice is not a valid option. Try again.")# ADDED CODE %%%%%%%%%%%%%%%%%%%%%%%%%%
+        # ask user for desired snack and put it in lowercase
+        desired_snack = input("Snack (type x to exit choices): ").lower()
 
-            #check snack amount is valid (less than 5)
-            if amount >= 5:
-                print("Sorry - we have a four snack maximum")
-                snack_choice = "invalid choice"
+        if desired_snack == "x":
+            return snack_order
 
-            #add snack and amount to list...
-            amount_snack = "{} {}".format(amount, snack_choice)
-            snack_row.append(amount)
-            snack_row.append(snack_choice)
+        # if desired_snack has a number, separate it into two (number / desired_snack)
+        if re.match(number_regex, desired_snack):
+            amount = int(desired_snack[0])
+            desired_snack = desired_snack[1:]
 
-            #check that snack is not the exit code before adding
-            if snack_choice != "x" and snack_choice != "invalid choice":
-                snack_order.append(amount_snack)
-                snack_order.append(snack_row)
-                print(amount_snack)
+        else:
+            amount = 1
+            desired_snack = desired_snack
+
+        # remove white space around snack
+        desired_snack = desired_snack.strip()
+
+        # check if snack is valid
+        snack_choice = string_check(desired_snack, valid_snacks)
+
+        # check snack amount is valid (less than 5)
+        if amount >= 5:
+            print("Sorry - we have a four snack maximum")
+            snack_choice = "invalid choice"
+
+        # add snack and amount to list...
+
+        snack_row.append(amount)
+        snack_row.append(snack_choice)
+
+        # check that snack is not the exit code before adding
+        if snack_choice != "x" and snack_choice != "invalid choice":
+            snack_order.append(snack_row)
 
 
-#""""""""""Main Routine""""""""""
+# """"""""""Main Routine""""""""""
 
-#Set up directions / lists needed to hold data
+# Set up directions / lists needed to hold data
 
-#list of valid yes / no responses
+# list of valid yes / no responses
 yes_no = [
     ["yes", "y"],
     ["no", 'n']
 ]
 
-#list of valid responses for payment method
+# list of valid responses for payment method
 pay_method = [
     ["cash", "ca"],
     ["credit", "cr"]
@@ -182,6 +200,8 @@ ticket_sales = 0
 #initialise lists (ti make data-frame in due course)
 all_names = []
 all_tickets = []
+
+#snack lists...
 popcorn = []
 mms = []
 pita_chips = []
@@ -190,17 +210,20 @@ orange_juice = []
 
 snack_lists = [popcorn, mms, pita_chips, water, orange_juice]
 
+#store surcharge mulitiplier
+surcharge_mult_list = []
 
 
-#Date Frame Dictornary
-movie_date_dict = {
+# Data Frame Dictionary
+movie_data_dict = {
     'Name': all_names,
     'Ticket': all_tickets,
     'Popcorn': popcorn,
     'Water': water,
     'Pita Chips': pita_chips,
     'M&Ms': mms,
-    'Orange Juice':orange_juice
+    'Orange Juice': orange_juice,
+    'Surcharge_Multiplier': surcharge_mult_list
 }
 
 #cost of each snack
@@ -211,8 +234,6 @@ price_dict = {
     'M&Ms': 3,
     'Orange Juice':3.25
 }
-
-
 
 #Ask user if they have used the program before & show instruction if necessary
 
@@ -251,24 +272,26 @@ while name != "x" and ticket_count < MAX_TICKETS:
         want_snack = input("Do you want to order snack?").lower()
         check_snack = string_check(want_snack, yes_no)
 
-    #if they say yes, ask what snacks they want
+    # if they say yes, ask what snacks they want
     if check_snack == "Yes":
-        get_snack = get_snack()
-    else:
-        get_snack = []
-
-    #show snack orders
-    print()
-    if len(snack_order) == 0:
-        print("Snacks Ordered: None")
+        snack_order = get_snack()
 
     else:
-        print("Snacks Ordered: ")
-        print(snack_order)
+        snack_order = []
 
-    #get payment method (ie: work out if surcharge is needed)
-        #ask for payment method
-    how_pay = "invalid chosen"
+    # assume no snacks have been bought..
+    for item in snack_lists:
+        item.append(0)
+
+    for item in snack_order:
+        if len(item) > 0:
+            to_find = (item[1])
+            amount = (item[0])
+            add_list = movie_data_dict[to_find]
+            add_list[-1] = amount
+
+    # ask for payment method
+    how_pay = "invalid choice"
     while how_pay == "invalid choice":
         how_pay = input("Please choose a payment method (cash or credit card)").lower()
         how_pay = string_check(how_pay, pay_method)
@@ -277,11 +300,54 @@ while name != "x" and ticket_count < MAX_TICKETS:
         surcharge_multiplier = 0.05
     else:
         surcharge_multiplier = 0
+
+    surcharge_mult_list.append(surcharge_multiplier)
+
 #End of tickets loop*
 
 #print details ...
-movie_frame = pandas.DataFrame(movie_date_dict)
+#create dataframe and set index to name column
+movie_frame = pandas.DataFrame(movie_data_dict)
+movie_frame = movie_frame.set_index('Name')
+
+#create column called 'sub Total'
+#fill it price for snacks and ticket
+movie_frame["Snacks"] = \
+    movie_frame['Popcorn']*price_dict["Popcorn"] + \
+    movie_frame['Water']*price_dict['Water'] + \
+    movie_frame['Pita Chips']*price_dict['Pita Chips'] + \
+    movie_frame['M&Ms']*price_dict['M&Ms'] + \
+    movie_frame['Orange Juice']*price_dict['Orange Juice']
+
+movie_frame["Sub Total"] = \
+    movie_frame['Ticket'] + \
+    movie_frame["Snacks"]
+
+movie_frame["Surcharge"] = \
+    movie_frame["Sub Total"] * movie_frame["Surcharge_Multiplier"]
+
+movie_frame["Total"] = movie_frame["Sub Total"] + \
+    movie_frame["Surcharge"]
+
+# shorten column names
+movie_frame = movie_frame.rename(columns={'Orange Juice': 'OJ',
+                                          'Pita Chips': 'Chips',
+                                          'Surcharge_Multiplier': 'SM'})
+
+# set up columns to be printed
+pandas.set_option('display.max_columns', None)
+
+# display numbers to 2 dp...
+pandas.set_option('precision', 2)
+
+print_all = input("Print all the columns?? (y) for yes")
+if print_all == "y":
+    print(movie_frame)
+else:
+    print(movie_frame[['Ticket', 'Sub Total',
+                       'Surcharge', 'Total']])
 print(movie_frame)
+
 
 #calculate ticket profit
 ticket_profit = ticket_sales - (5 * ticket_count)
